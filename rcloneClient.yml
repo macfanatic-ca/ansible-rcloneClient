@@ -1,0 +1,90 @@
+---
+########################### Target Host(s) ###########################
+# Specify a Single host
+#       hosts: server1
+# Specify a defined group of hosts from hosts inventory
+#       hosts: production
+# Specify a group of hosts
+#       hosts: server1:server2
+########################### Specify Host(s) ##########################
+- hosts:
+########################### Do Not Modify ###########################
+  become: yes
+  vars_files:
+        - ../../vault/rclone/rclone.yml
+  tasks:
+   - name: download rclone archive
+     get_url:
+         url: http://downloads.rclone.org/rclone-current-linux-amd64.zip
+         dest: /tmp/rclone-current-linux-amd64.zip
+     tags:
+        - rclone
+        - install
+
+   - name: unzip rclone archive
+     unarchive:
+         copy: no
+         src: /tmp/rclone-current-linux-amd64.zip
+         dest: /tmp/
+     tags:
+        - rclone
+        - install
+
+   - name: remove rclone archive
+     file:
+         path: /tmp/rclone-current-linux-amd64.zip
+         state: absent
+     tags:
+        - rclone
+        - install
+
+   - name: find rclone directory
+     shell: ls -d /tmp/rclone*
+     register: rclone_dir
+     tags:
+        - rclone
+        - install
+
+   - name: copy binary
+     copy:
+         remote_src: True
+         src: "{{ rclone_dir.stdout }}/rclone"
+         dest: /usr/sbin/
+         owner: root
+         group: root
+         mode: 755
+     tags:
+        - rclone
+        - install
+
+   - name: copy manpage
+     copy:
+         remote_src: True
+         src: "{{ rclone_dir.stdout }}/rclone.1"
+         dest: /usr/local/share/man/man1/
+         owner: root
+         group: root
+         mode: 0755
+     tags:
+        - rclone
+        - install
+
+   - name: remove rclone directory
+     file:
+         path: "{{ rclone_dir.stdout }}"
+         state: absent
+     tags:
+        - rclone
+        - install
+
+   - name: copy config
+     template:
+         backup: yes
+         src: rclone.conf.j2
+         dest: /root/.rclone.conf
+         owner: root
+         group: root
+         mode: 0600
+     tags:
+        - rclone
+        - config
