@@ -17,33 +17,25 @@
      get_url:
          url: http://downloads.rclone.org/rclone-current-linux-amd64.zip
          dest: /tmp/rclone-current-linux-amd64.zip
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: unzip rclone archive
      unarchive:
          copy: no
          src: /tmp/rclone-current-linux-amd64.zip
          dest: /tmp/
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: remove rclone archive
      file:
          path: /tmp/rclone-current-linux-amd64.zip
          state: absent
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: find rclone directory
      shell: ls -d /tmp/rclone*
      register: rclone_dir
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: copy binary
      copy:
@@ -53,9 +45,7 @@
          owner: root
          group: root
          mode: 755
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: copy manpage
      copy:
@@ -65,17 +55,13 @@
          owner: root
          group: root
          mode: 0755
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: remove rclone directory
      file:
          path: "{{ rclone_dir.stdout }}"
          state: absent
-     tags:
-        - rclone
-        - install
+     tags: install
 
    - name: copy config
      template:
@@ -85,6 +71,4 @@
          owner: root
          group: root
          mode: 0600
-     tags:
-        - rclone
-        - config
+     tags: config

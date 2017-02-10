@@ -1,5 +1,11 @@
-[ACD]
-type = amazon cloud drive
-client_id =
-client_secret =
-token = {"access_token":"{{ rclone_ACD_Token }}","expiry":"2016-03-27T16:28:08.696896837-07:00"}
+[{{ rclone_s3_remote_name }}]
+type = s3
+env_auth = false
+access_key_id = {{ rclone_s3_access_key_id }}
+secret_access_key = {{ rclone_s3_secret_access_key }}
+region = {{ rclone_s3_region }}
+endpoint =
+location_constraint = {{ rclone_s3_location_constraint }}
+acl = bucket-owner-full-control
+server_side_encryption = AES256
+storage_class = STANDARD
