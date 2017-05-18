@@ -11,7 +11,7 @@
 ########################### Do Not Modify ###########################
   become: yes
   vars_files:
-        - ../../vault/rclone/rclone.yml
+        - ../../vault/rcloneClient/rcloneClient.yml
   tasks:
    - name: download rclone archive
      get_url:
